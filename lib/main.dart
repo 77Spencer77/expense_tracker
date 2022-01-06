@@ -4,16 +4,28 @@ import './user_input.dart';
 import './transaction.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Dashboard(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class Dashboard extends StatefulWidget {
+  // This widget is the root of your application.
+  const Dashboard({Key? key}) : super(key: key);
+  @override
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
   final List<Transaction> transaction = [
     Transaction(
         id: "dsf", amount: 67.9, date: DateTime.now(), title: "newshoes")
@@ -33,40 +45,41 @@ class _MyAppState extends State<MyApp> {
     showModalBottomSheet(
         context: cxt,
         builder: (_) {
-          return User_input(_function);
+          return GestureDetector(
+            onTap: () {},
+            child: User_input(_function),
+            behavior: HitTestBehavior.opaque,
+          );
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Expense App"),
-          actions: [
-            IconButton(
-                onPressed: () => {showtextfield(context)},
-                icon: Icon(Icons.add))
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Expense App"),
+        actions: [
+          IconButton(
+              onPressed: () => {showtextfield(context)}, icon: Icon(Icons.add))
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              child: Card(
+                child: Text("CARD TEXT"),
+                elevation: 8,
+              ),
+            ),
+            NewTransaction(transaction),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SingleChildScrollView(
-                child: Card(
-                  child: Text("CARD TEXT"),
-                  elevation: 8,
-                ),
-              ),
-              NewTransaction(transaction),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => {showtextfield(context)},
-        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => {showtextfield(context)},
       ),
     );
   }
