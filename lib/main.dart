@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './new_transaction.dart';
 import './user_input.dart';
 import './transaction.dart';
+import './chart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +14,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Expense Tracker",
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+        fontFamily: "Quicksand",
+        textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(
+                fontFamily: "OpensSans",
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+      ),
       home: Dashboard(),
     );
   }
@@ -41,6 +55,16 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  List<Transaction> get lastWeekTransaction {
+    return transaction.where((index) {
+      return index.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   void showtextfield(BuildContext cxt) {
     showModalBottomSheet(
         context: cxt,
@@ -66,12 +90,7 @@ class _DashboardState extends State<Dashboard> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Card(
-                child: Text("CARD TEXT"),
-                elevation: 8,
-              ),
-            ),
+            Chart(lastWeekTransaction),
             NewTransaction(transaction),
           ],
         ),
